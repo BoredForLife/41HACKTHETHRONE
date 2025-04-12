@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bill Extractor AI</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.7/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="app-header">
+      <h2>Bill Extractor AI</h2>
+    </div>
+    
+    <div class="app-body">
+      <div class="card">
+        <div class="card-title">Upload Receipt</div>
+        <div class="upload-section">
+          <div class="file-input-wrapper">
+            <label for="imageUpload" class="file-input-label">Choose a bill image or click to browse</label>
+            <input type="file" id="imageUpload" accept="image/*" />
+          </div>
+          <button class="btn-primary" onclick="processImage()">Extract Data</button>
+        </div>
+        <div id="loader" class="loader"></div>
+      </div>
+
+      <div id="actionPanel" style="display:none;">
+        <div class="control-section">
+          <div class="dropdown-group">
+            <button class="btn-secondary" onclick="toggleDownload()">Download</button>
+            <select id="downloadFormat" onchange="handleDownload(this.value)" style="display:none;">
+              <option value="" disabled selected>Select format</option>
+              <option value="excel">Excel</option>
+              <option value="pdf">PDF</option>
+            </select>
+          </div>
+
+          <button class="btn-accent" onclick="toggleChart()">
+            <span id="chartBtnText">Show Chart</span>
+          </button>
+          
+          <button class="btn-success" id="scanQRBtn" onclick="openQRModal()">Scan QR Code</button>
+        </div>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        <div class="empty-state-icon">📊</div>
+        <h3>No Data Yet</h3>
+        <p>Upload a bill image to extract data</p>
+      </div>
+
+      <div id="resultPanel" style="display:none;">
+        <div id="summary" class="summary"></div>
+        
+        <div class="card">
+          <div class="card-title">Items <span id="itemCount" class="pill pill-success">0 items</span></div>
+          <table id="dataTable">
+            <thead>
+              <tr><th>Item</th><th>Price</th></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dual-section">
+        <div id="chartContainer" style="display:none;">
+          <h3>Price Visualization</h3>
+          <select id="chartType" onchange="renderChart(extractedJSON.items)">
+            <option value="bar" selected>Bar Chart</option>
+            <option value="pie">Pie Chart</option>
+            <option value="line">Line Chart</option>
+          </select>
+          <canvas id="billChart" width="400" height="250"></canvas>
+        </div>
+
+        <div id="qrCodeContainer" style="display:none;">
+          <h3>QR Code</h3>
+          <p>Scan this code to share bill data</p>
+          <button class="btn-primary" onclick="generateQRCode()">Generate QR Code</button>
+          <div id="qrcode"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="qrModal">
+    <div id="qrModalContent">
+      <h3>Scan QR Code</h3>
+      <p>Point your camera at a bill QR code</p>
+      <div id="reader"></div>
+      <button class="btn-primary" onclick="closeQRModal()">Close</button>
+    </div>
+  </div>
+
+  <script src="script.js">
+    
+  </script>
+</body>
+</html>
